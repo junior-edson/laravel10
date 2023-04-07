@@ -4,10 +4,12 @@ namespace App\Http\Livewire\Tweet;
 
 use App\Models\Tweet;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
     public ?string $body = null;
 
     public function render(): View
@@ -17,11 +19,13 @@ class Create extends Component
 
     public function tweet(): void
     {
-        /* $this->validate([
+        $this->authorize('create', Tweet::class);
+
+        $this->validate([
             'body' => 'required|max:255'
         ]);
 
-        auth()->user()->tweets()->create([
+        /* auth()->user()->tweets()->create([
             'body' => $this->body
         ]);
 
@@ -33,5 +37,6 @@ class Create extends Component
         ]);
 
         $this->emit('tweet::created');
+        $this->reset('body');
     }
 }
